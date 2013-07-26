@@ -3,15 +3,9 @@ infoconnect-api-java-client
 
 Staging repo for Java Sample Client Code
 
-This is a work in progress at this point. 
-TODO:
-	- implement remaining search fields for Companies
-	- implement remaining search fields for People
-	- implement SICs API call
-	- implement XML versions of output?
-
-The API makes use of the GSON library (https://code.google.com/p/google-gson/) to convert
-the java objects into JSON for passing into the API. This makes it easy to add new fields
-to the search and output. It also means that the need to handle both JSON and XML input 
-isn't as important since a user would be working directly with Java objects.
-
+There are a couple of projects in this repo.
+	InfoconnectAPI - this is a Java library that encapsulates the functionality of the Infoconnect REST API.
+		The intention is to make it as easy as possible to get started.
+	
+	SWTTest - this is a desktop java app that uses SWT and the InfoconnectAPI to plot companies on a 
+		embedded Google map.
