@@ -3,10 +3,6 @@ package com.infogroup.api.searchtypes;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.infogroup.api.types.AddressParsedFields;
-import com.infogroup.api.types.CitiesByStateProvinceFields;
-import com.infogroup.api.types.GeoPoint;
-
 /**
  * 
  * @author craigs
@@ -44,53 +40,16 @@ public class CompanySearch extends Search {
 	private static final String SIZE_RANGE_10000_VALUE = "10000";
 	private static final int SALES_VOLUMN_RANGE_1_500K = 0;
 
-	public AddressParsedFields AddressParsed;
-	public String city;
-	protected ArrayList<CitiesByStateProvinceFields> CitiesByStateProvince;
 	public String companyname;
 	public Long CorporateEmployeesSizeActual = null;
 
 	protected List<String> CorporateEmployeesSizeRange = null;
 	public Long CorporateSalesVolumeActual = null;
 	protected List<String> CorporateSalesVolumeRange = null;
-	public String StateProvince;
-
-	public boolean NthRecord;
-	public GeoPoint sortCenter;
-	public ArrayList<String> notid = null;
-	public int Offset = 0;
-	public String phone;
 
 	/*
-	 * helper functions
+	 * helper functions for company specific search fields
 	 */
-
-	public void clearExcludes() {
-		notid.clear();
-		notid = null; // setting to null ensures it won't show up in the JSON
-	}
-
-	public void excludeCompany(String id) throws Exception {
-		if (null == notid) {
-			notid = new ArrayList<String>();
-		} else if (999 == notid.size()) {
-			throw new Exception("Too many exclusions. 1000 max.");
-		}
-
-		if (!notid.contains(id)) {
-			notid.add(id);
-		}
-	}
-
-	public void addCityByState(String city, String state) throws Exception {
-		if (null == CitiesByStateProvince) {
-			CitiesByStateProvince = new ArrayList<CitiesByStateProvinceFields>();
-		} else if (999 == CitiesByStateProvince.size()) {
-			throw new Exception("Too many search cities. 1000 max.");
-		}
-
-		CitiesByStateProvince.add(new CitiesByStateProvinceFields(city, state));
-	}
 
 	public void clearEmployeeSizeRange() {
 		CorporateEmployeesSizeRange.clear();

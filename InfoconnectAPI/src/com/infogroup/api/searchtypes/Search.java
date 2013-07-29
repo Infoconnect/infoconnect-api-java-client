@@ -3,6 +3,8 @@ package com.infogroup.api.searchtypes;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.infogroup.api.types.AddressParsedFields;
+import com.infogroup.api.types.CitiesByStateProvinceFields;
 import com.infogroup.api.types.GeoPoint;
 import com.infogroup.api.types.GeoPointRadius;
 import com.infogroup.api.types.RadiusPostalCode;
@@ -21,8 +23,22 @@ public class Search {
 
 	protected String resourceType = RESULT_TYPE_CORE;
 
+	public AddressParsedFields AddressParsed;
+	public String city;
+	public String phone;
+	public String Firstname;
+	public GeoPoint location;
+	public String Lastname;
+	public String middleInitial;
+	public String PostalCode;
+	public String StateProvince;
+
 	public int Limit = 10;
+	public int Offset = 0;
 	protected List<String> fields;
+
+	public boolean NthRecord;
+	public GeoPoint sortCenter;
 
 	public class PolygonPoints {
 		List<GeoPoint> Points;
@@ -32,6 +48,43 @@ public class Search {
 
 	protected List<GeoPointRadius> RadiusCenterPointList;
 	protected List<RadiusPostalCode> RadiusPostalCodeList;
+
+	public ArrayList<String> notid = null;
+
+	protected ArrayList<CitiesByStateProvinceFields> CitiesByStateProvince;
+
+	public void clearCityByState() {
+		CitiesByStateProvince.clear();
+		CitiesByStateProvince = null; // setting to null ensures it won't show
+										// up in the JSON
+	}
+
+	public void addCityByState(String city, String state) throws Exception {
+		if (null == CitiesByStateProvince) {
+			CitiesByStateProvince = new ArrayList<CitiesByStateProvinceFields>();
+		} else if (999 == CitiesByStateProvince.size()) {
+			throw new Exception("Too many search cities. 1000 max.");
+		}
+
+		CitiesByStateProvince.add(new CitiesByStateProvinceFields(city, state));
+	}
+
+	public void clearExcludes() {
+		notid.clear();
+		notid = null; // setting to null ensures it won't show up in the JSON
+	}
+
+	public void excludeRecord(String id) throws Exception {
+		if (null == notid) {
+			notid = new ArrayList<String>();
+		} else if (999 == notid.size()) {
+			throw new Exception("Too many exclusions. 1000 max.");
+		}
+
+		if (!notid.contains(id)) {
+			notid.add(id);
+		}
+	}
 
 	public void clearSearchPostalRadius() {
 		RadiusCenterPointList.clear();

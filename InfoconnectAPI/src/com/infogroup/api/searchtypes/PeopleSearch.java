@@ -1,8 +1,7 @@
 package com.infogroup.api.searchtypes;
 
-import com.infogroup.api.types.AddressParsedFields;
-import com.infogroup.api.types.GeoPoint;
 import com.infogroup.api.types.Lifestyle;
+import com.infogroup.api.types.TargetReady;
 
 public class PeopleSearch extends Search {
 	// these are only support by People records
@@ -25,16 +24,7 @@ public class PeopleSearch extends Search {
 		}
 	}
 
-	public AddressParsedFields addressParsed;
-	public String city;
-	public String Firstname;
-	public GeoPoint location;
-	public String Lastname;
-	public String middleInitial;
-	public String phone;
-	public String PostalCode;
-	public String StateProvince;
-
 	public Lifestyle Lifestyle;
+	public TargetReady TargetReady;
 
 }
