@@ -30,6 +30,7 @@ import com.infogroup.api.records.Person;
 import com.infogroup.api.searchtypes.CompanySearch;
 import com.infogroup.api.searchtypes.Search;
 import com.infogroup.api.types.GeoPoint;
+import com.infogroup.api.types.GeoPointRadius;
 
 public class GoogleMapsTest {
 
@@ -93,22 +94,27 @@ public class GoogleMapsTest {
 				list.removeAll();
 				Double lat = ((Double) browser.evaluate("return map.getCenter().lat();"));
 				Double lng = ((Double) browser.evaluate("return map.getCenter().lng();"));
-				Double neLat = ((Double) browser.evaluate("return lastBounds.getNorthEast().lat();"));
-				Double neLng = ((Double) browser.evaluate("return lastBounds.getNorthEast().lng();"));
-				Double swLat = ((Double) browser.evaluate("return lastBounds.getSouthWest().lat();"));
-				Double swLng = ((Double) browser.evaluate("return lastBounds.getSouthWest().lng();"));
-				System.out.println(neLat + "," + neLng + " - " + swLat + "," + swLng);
-
+				boolean hasRegion = (Boolean) browser.evaluate("return lastBounds != undefined");
 				CompanySearch cs = new CompanySearch();
 				cs.setResourceType(Search.RESOURCE_TYPE_BASIC);
 
 				try {
-					java.util.List<GeoPoint> pts = new ArrayList<GeoPoint>();
-					pts.add(new GeoPoint(df.format(neLat), df.format(swLng)));
-					pts.add(new GeoPoint(df.format(neLat), df.format(neLng)));
-					pts.add(new GeoPoint(df.format(swLat), df.format(swLng)));
-					pts.add(new GeoPoint(df.format(swLat), df.format(neLng)));
-					cs.addPolygon(pts);
+					if (hasRegion) {
+						Double neLat = ((Double) browser.evaluate("return lastBounds.getNorthEast().lat();"));
+						Double neLng = ((Double) browser.evaluate("return lastBounds.getNorthEast().lng();"));
+						Double swLat = ((Double) browser.evaluate("return lastBounds.getSouthWest().lat();"));
+						Double swLng = ((Double) browser.evaluate("return lastBounds.getSouthWest().lng();"));
+						System.out.println(neLat + "," + neLng + " - " + swLat + "," + swLng);
+						java.util.List<GeoPoint> pts = new ArrayList<GeoPoint>();
+						pts.add(new GeoPoint(df.format(neLat), df.format(swLng)));
+						pts.add(new GeoPoint(df.format(neLat), df.format(neLng)));
+						pts.add(new GeoPoint(df.format(swLat), df.format(swLng)));
+						pts.add(new GeoPoint(df.format(swLat), df.format(neLng)));
+						cs.addPolygon(pts);
+					} else {
+						System.out.println("Searching 3 miles around map center: " + lat + ", " + lng);
+						cs.addSearchRadius(new GeoPointRadius(df.format(lat), df.format(lng), 3));
+					}
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

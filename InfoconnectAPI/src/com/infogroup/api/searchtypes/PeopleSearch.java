@@ -1,13 +1,8 @@
 package com.infogroup.api.searchtypes;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.infogroup.api.types.AddressParsedFields;
 import com.infogroup.api.types.GeoPoint;
-import com.infogroup.api.types.GeoPointRadius;
 import com.infogroup.api.types.Lifestyle;
-import com.infogroup.api.types.RadiusPostalCode;
 
 public class PeopleSearch extends Search {
 	// these are only support by People records
@@ -42,36 +37,4 @@ public class PeopleSearch extends Search {
 
 	public Lifestyle Lifestyle;
 
-	protected List<GeoPointRadius> RadiusCenterPointList;
-	protected List<RadiusPostalCode> RadiusPostalCodeList;
-
-	public void clearSearchPostalRadius() {
-		RadiusCenterPointList.clear();
-		RadiusCenterPointList = null;
-	}
-
-	public void addSearchPostalRadius(RadiusPostalCode zip) throws Exception {
-		if (null == RadiusPostalCodeList) {
-			RadiusPostalCodeList = new ArrayList<RadiusPostalCode>();
-		} else if (5 == RadiusPostalCodeList.size()) {
-			throw new Exception("Maxiumum of 5 postal codes are allowed for Radius Search");
-		}
-
-		RadiusPostalCodeList.add(zip);
-	}
-
-	public void clearSearchRadius() {
-		RadiusCenterPointList.clear();
-		RadiusCenterPointList = null;
-	}
-
-	public void addSearchRadius(GeoPointRadius pt) throws Exception {
-		if (null == RadiusCenterPointList) {
-			RadiusCenterPointList = new ArrayList<GeoPointRadius>();
-		} else if (5 == RadiusCenterPointList.size()) {
-			throw new Exception("Maxiumum of 5 points are allowed for Radius Search");
-		}
-
-		RadiusCenterPointList.add(pt);
-	}
 }
