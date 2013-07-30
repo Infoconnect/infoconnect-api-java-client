@@ -21,6 +21,7 @@ import com.infogroup.api.searchtypes.CompanySearch;
 import com.infogroup.api.searchtypes.MatchSearch;
 import com.infogroup.api.searchtypes.PeopleSearch;
 import com.infogroup.api.searchtypes.Search;
+import com.infogroup.api.types.ResourceType;
 
 public class InfoconnectAPI {
 
@@ -97,11 +98,11 @@ public class InfoconnectAPI {
 
 	private int count(String api, Search search) {
 		// need to override the resource type to be 'counts'
-		String oldType = search.getResourceType();
-		search.setResourceType(Search.RESOURCE_TYPE_COUNTS);
+		ResourceType oldType = search.resourceType;
+		search.resourceType = ResourceType.COUNTS;
 		// convert the object to JSON
 		String jsonSearch = gson.toJson(search);
-		search.setResourceType(oldType); // now put it back to what it was
+		search.resourceType = oldType; // now put it back to what it was
 
 		System.out.println(jsonSearch);
 
@@ -117,14 +118,17 @@ public class InfoconnectAPI {
 	 * Company APIs
 	 */
 
-	public Company company(int id) {
-		String output = doGet(apiCompanies + "/" + id);
+	public Company company(String id) {
+		return company(ResourceType.BASIC, id);
+	}
+
+	public Company company(ResourceType type, String id) {
+		String output = doGet(type, apiCompanies + "/" + id);
 		return gson.fromJson(output, Company.class);
 	}
 
 	public List<Company> companies(CompanySearch search) {
 		String jsonSearch = gson.toJson(search);
-		System.out.println(jsonSearch);
 		return companies(jsonSearch);
 	}
 
@@ -132,7 +136,6 @@ public class InfoconnectAPI {
 		String output = doPost(apiCompanies, search);
 		Type type = new TypeToken<List<Company>>() {
 		}.getType();
-		System.out.println(output);
 		return gson.fromJson(output, type);
 	}
 
@@ -140,9 +143,17 @@ public class InfoconnectAPI {
 	 * People APIs
 	 */
 
+	public Person person(String id) {
+		return person(ResourceType.BASIC, id);
+	}
+
+	public Person person(ResourceType type, String id) {
+		String output = doGet(type, apiPeople + "/" + id);
+		return gson.fromJson(output, Person.class);
+	}
+
 	public List<Person> people(PeopleSearch search) {
 		String jsonSearch = gson.toJson(search);
-		System.out.println(jsonSearch);
 		return people(jsonSearch);
 	}
 
@@ -150,7 +161,6 @@ public class InfoconnectAPI {
 		String output = doPost(apiPeople, search);
 		Type type = new TypeToken<List<Person>>() {
 		}.getType();
-		System.out.println(output);
 		return gson.fromJson(output, type);
 	}
 
@@ -160,19 +170,16 @@ public class InfoconnectAPI {
 
 	public MatchResult match(MatchSearch search) {
 		String jsonSearch = gson.toJson(search);
-		System.out.println(jsonSearch);
 		return match(jsonSearch);
 	}
 
 	public MatchResult match(String search) {
 		String output = doPost(apiMatch, search);
-		System.out.println(output);
 		return gson.fromJson(output, MatchResult.class);
 	}
 
 	public List<MatchResult> match(List<MatchSearch> search) {
 		String jsonSearch = gson.toJson(search);
-		System.out.println(jsonSearch);
 		return multiMatch(jsonSearch);
 	}
 
@@ -181,7 +188,6 @@ public class InfoconnectAPI {
 		}.getType();
 
 		String output = doPost(apiMultiMatch, search);
-		System.out.println(output);
 		return gson.fromJson(output, type);
 	}
 
@@ -206,6 +212,8 @@ public class InfoconnectAPI {
 		lastAnswer = null;
 		try {
 			client = new URL(infoConnectAPIRoot + api + "?" + query).openConnection();
+			System.out.println("Request: POST " + client.getURL());
+			System.out.println("Body: " + body);
 			client.setDoOutput(true);
 			client.setRequestProperty("Content-Type", postFormat);
 			client.setRequestProperty("Accept", resultFormat);
@@ -224,7 +232,10 @@ public class InfoconnectAPI {
 			HttpURLConnection httpConnection = (HttpURLConnection) client;
 
 			statusCode = httpConnection.getResponseCode();
+			System.out.println("Response code: " + statusCode);
+
 			answer = IOUtils.toString(response);
+			System.out.println("Response: " + answer);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -236,22 +247,24 @@ public class InfoconnectAPI {
 		return answer;
 	}
 
-	private String doGet(String api) {
-		String query = "apikey=" + apiKey;
+	private String doGet(ResourceType type, String api) {
+		String query = "apikey=" + apiKey + "&resourceType=" + type;
 		String answer = null;
 		URLConnection client;
 		statusCode = 0;
 		lastAnswer = null;
 		try {
 			client = new URL(infoConnectAPIRoot + api + "?" + query).openConnection();
+			System.out.println("Request: GET " + client.getURL());
 			client.setRequestProperty("Accept", "application/json");
 			InputStream response = client.getInputStream();
 
 			HttpURLConnection httpConnection = (HttpURLConnection) client;
 
 			statusCode = httpConnection.getResponseCode();
-
+			System.out.println("Response code: " + statusCode);
 			answer = IOUtils.toString(response);
+			System.out.println("Response: " + answer);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

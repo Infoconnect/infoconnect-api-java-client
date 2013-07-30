@@ -12,20 +12,11 @@ import com.infogroup.api.types.GeoPoint;
 import com.infogroup.api.types.GeoPointRadius;
 import com.infogroup.api.types.RadiusPostalCode;
 import com.infogroup.api.types.RecordStatus;
+import com.infogroup.api.types.ResourceType;
 
 public class Search {
 
-	public static final int RESOURCE_TYPE_CORE = 0;
-	public static final int RESOURCE_TYPE_BASIC = 1;
-	public static final int RESOURCE_TYPE_ENHANCED = 2;
-	public static final int RESOURCE_TYPE_COUNTS = 3;
-	public static final int RESOURCE_TYPE_SEARCH_MAX = 4;
-
-	private static final String RESULT_TYPE_CORE = "core";
-	private static final String RESULT_TYPE_BASIC = "basic";
-	private static final String RESULT_TYPE_ENHANCED = "enhanced";
-	private static final String RESULT_TYPE_COUNTS = "counts";
-	protected String resourceType = RESULT_TYPE_CORE;
+	public ResourceType resourceType;
 
 	public AddressParsedFields AddressParsed;
 	public String city;
@@ -226,28 +217,4 @@ public class Search {
 		fields.add(field);
 	}
 
-	public String getResourceType() {
-		return resourceType;
-	}
-
-	public void setResourceType(String type) {
-		resourceType = type;
-	}
-
-	public void setResourceType(int type) {
-		switch (type) {
-		case RESOURCE_TYPE_CORE:
-			resourceType = RESULT_TYPE_CORE;
-			break;
-		case RESOURCE_TYPE_BASIC:
-			resourceType = RESULT_TYPE_BASIC;
-			break;
-		case RESOURCE_TYPE_ENHANCED:
-			resourceType = RESULT_TYPE_ENHANCED;
-			break;
-		case RESOURCE_TYPE_COUNTS:
-			resourceType = RESULT_TYPE_COUNTS;
-			break;
-		}
-	}
 }

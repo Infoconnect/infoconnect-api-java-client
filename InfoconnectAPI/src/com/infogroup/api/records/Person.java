@@ -14,6 +14,7 @@ public class Person extends BasicRecord {
 	public String Gender;
 	public String HeadOfHousehold;
 	public String HomeValueRange;
+	public String HouseholdId;
 	public String IncomeRange;
 	public String IsHomeowner;
 	public String LastNameSuffix;

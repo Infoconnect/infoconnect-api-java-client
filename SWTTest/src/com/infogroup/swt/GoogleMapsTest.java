@@ -28,9 +28,9 @@ import com.infogroup.api.InfoconnectAPI;
 import com.infogroup.api.records.Company;
 import com.infogroup.api.records.Person;
 import com.infogroup.api.searchtypes.CompanySearch;
-import com.infogroup.api.searchtypes.Search;
 import com.infogroup.api.types.GeoPoint;
 import com.infogroup.api.types.GeoPointRadius;
+import com.infogroup.api.types.ResourceType;
 
 public class GoogleMapsTest {
 
@@ -96,7 +96,7 @@ public class GoogleMapsTest {
 				Double lng = ((Double) browser.evaluate("return map.getCenter().lng();"));
 				boolean hasRegion = (Boolean) browser.evaluate("return lastBounds != undefined");
 				CompanySearch cs = new CompanySearch();
-				cs.setResourceType(Search.RESOURCE_TYPE_BASIC);
+				cs.resourceType = ResourceType.BASIC;
 
 				try {
 					if (hasRegion) {
@@ -121,7 +121,6 @@ public class GoogleMapsTest {
 				}
 				int count = api.count(cs);
 				hitCount.setText(Integer.toString(count));
-				cs.setResourceType(Search.RESOURCE_TYPE_BASIC);
 
 				java.util.List<Company> companies = api.companies(cs);
 				if (null != companies) {
