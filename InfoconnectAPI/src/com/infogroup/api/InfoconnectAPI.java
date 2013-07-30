@@ -3,11 +3,13 @@ package com.infogroup.api;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -16,6 +18,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.infogroup.api.records.Company;
 import com.infogroup.api.records.Person;
+import com.infogroup.api.records.SIC;
 import com.infogroup.api.records.match.MatchResult;
 import com.infogroup.api.searchtypes.CompanySearch;
 import com.infogroup.api.searchtypes.MatchSearch;
@@ -82,7 +85,31 @@ public class InfoconnectAPI {
 	/*
 	 * SIC APIs
 	 */
-	// TODO: implement these
+	private class SICMatches {
+		List<SIC> Matches;
+	}
+
+	public List<SIC> sics(String keyword) {
+		return sics(keyword, false);
+	}
+
+	public List<SIC> sics(String keyword, boolean preferred) {
+		String output;
+		try {
+			output = doGet(ResourceType.NULL, apiSics, "preferred=" + preferred + "&keyword=" + URLEncoder.encode(keyword, "UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		SICMatches answer = gson.fromJson(output, SICMatches.class);
+		return answer.Matches;
+	}
+
+	public SIC sic(int code) {
+		String output = doGet(ResourceType.NULL, apiSics + "/" + code);
+		return gson.fromJson(output, SIC.class);
+	}
 
 	/*
 	 * Count APIs
@@ -248,7 +275,17 @@ public class InfoconnectAPI {
 	}
 
 	private String doGet(ResourceType type, String api) {
-		String query = "apikey=" + apiKey + "&resourceType=" + type;
+		return doGet(type, api, null);
+	}
+
+	private String doGet(ResourceType type, String api, String q) {
+		String query = "apikey=" + apiKey;
+		if (ResourceType.NULL != type) {
+			query += "&resourceType=" + type;
+		}
+		if (null != q && !q.isEmpty()) {
+			query += "&" + q;
+		}
 		String answer = null;
 		URLConnection client;
 		statusCode = 0;
