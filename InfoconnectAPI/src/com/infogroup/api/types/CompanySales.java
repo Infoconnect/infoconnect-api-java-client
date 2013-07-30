@@ -1,0 +1,17 @@
+package com.infogroup.api.types;
+
+public enum CompanySales {
+	SALES_1_500K("1-500000"), SALES_500K_1M("500000-1000000"), SALES_1M_2M500K("1000000-2500000"), SALES_2M500K_5M("2500000-5000000"), SALES_5M_10M(
+			"5000000-10000000"), SALES_10M_20M("10000000-20000000"), SALES_20M_50M("20000000-50000000"), SALES_50M_100M("50000000-100000000"), SALES_100M_500M(
+			"100000000-500000000"), SALES_500M_1B("500000000-1000000000"), SALES_1B("1000000000");
+
+	private String val;
+
+	private CompanySales(String val) {
+		this.val = val;
+	}
+
+	public String toString() {
+		return val;
+	}
+}

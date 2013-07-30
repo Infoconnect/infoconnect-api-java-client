@@ -3,6 +3,10 @@ package com.infogroup.api.searchtypes;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.infogroup.api.types.CompanySales;
+import com.infogroup.api.types.CompanySize;
+import com.infogroup.api.types.CreditRatingScore;
+
 /**
  * 
  * @author craigs
@@ -15,86 +19,111 @@ import java.util.List;
  */
 
 public class CompanySearch extends Search {
-	private static final int SIZE_RANGE_1_4 = 0;
-	private static final int SIZE_RANGE_5_9 = 1;
-	private static final int SIZE_RANGE_10_19 = 2;
-	private static final int SIZE_RANGE_20_49 = 3;
-	private static final int SIZE_RANGE_50_99 = 4;
-	private static final int SIZE_RANGE_100_249 = 5;
-	private static final int SIZE_RANGE_250_499 = 6;
-	private static final int SIZE_RANGE_500_999 = 7;
-	private static final int SIZE_RANGE_1000_4999 = 8;
-	private static final int SIZE_RANGE_5000_9999 = 9;
-	private static final int SIZE_RANGE_10000 = 10;
 
-	private static final String SIZE_RANGE_1_4_VALUE = "1-4";
-	private static final String SIZE_RANGE_5_9_VALUE = "5-9";
-	private static final String SIZE_RANGE_10_19_VALUE = "10-19";
-	private static final String SIZE_RANGE_20_49_VALUE = "20-49";
-	private static final String SIZE_RANGE_50_99_VALUE = "50-99";
-	private static final String SIZE_RANGE_100_249_VALUE = "100-249";
-	private static final String SIZE_RANGE_250_499_VALUE = "250-499";
-	private static final String SIZE_RANGE_500_999_VALUE = "500-999";
-	private static final String SIZE_RANGE_1000_4999_VALUE = "1000-4999";
-	private static final String SIZE_RANGE_5000_9999_VALUE = "5000-9999";
-	private static final String SIZE_RANGE_10000_VALUE = "10000";
-	private static final int SALES_VOLUMN_RANGE_1_500K = 0;
-
-	public String companyname;
+	public String CompanyName;
 	public Long CorporateEmployeesSizeActual = null;
-
-	protected List<String> CorporateEmployeesSizeRange = null;
+	public CreditRatingScore CreditRatingScore;
+	protected List<CompanySize> CorporateEmployeesSizeRange = null;
 	public Long CorporateSalesVolumeActual = null;
-	protected List<String> CorporateSalesVolumeRange = null;
+	protected List<CompanySales> CorporateSalesVolumeRange = null;
+
+	public Long LocationEmployeesSizeActual = null;
+	protected List<CompanySize> LocationEmployeesSizeRange = null;
+	public Long LocationSalesVolumeActual = null;
+	protected List<CompanySales> LocationSalesVolumeRange = null;
+
+	public boolean IsFranchise;
+	public String EIN;
+
+	public String PrimaryNaics;
+	public String PrimarySic;
+	public String TickerSymbol;
+
+	protected List<String> Naics = null;
+	protected List<String> Sic = null;
+	protected List<String> StatesProvinces = null;
 
 	/*
 	 * helper functions for company specific search fields
 	 */
+	public void clearNaicsCodes() {
+		Naics.clear();
+		Naics = null;
+	}
+
+	public void addNaicsCode(String code) throws Exception {
+		if (null == Naics) {
+			Naics = new ArrayList<String>();
+		} else if (1000 == Naics.size()) {
+			throw new Exception("Maxiumum of 1000 NAICS codes are allowed for Search");
+		}
+
+		if (!Naics.contains(code)) {
+			Naics.add(code);
+		}
+	}
+
+	public void clearSICs() {
+		Sic.clear();
+		Sic = null;
+	}
+
+	public void addSICCode(String code) throws Exception {
+		if (null == Sic) {
+			Sic = new ArrayList<String>();
+		} else if (1000 == Sic.size()) {
+			throw new Exception("Maxiumum of 1000 SIC codes are allowed for Search");
+		}
+
+		if (!Sic.contains(code)) {
+			Sic.add(code);
+		}
+	}
+
+	public void clearStatesProvinces() {
+		StatesProvinces.clear();
+		StatesProvinces = null;
+	}
+
+	public void addStatesProvinces(String state) throws Exception {
+		if (null == StatesProvinces) {
+			StatesProvinces = new ArrayList<String>();
+		} else if (1000 == StatesProvinces.size()) {
+			throw new Exception("Maxiumum of 1000 States/Provinces are allowed for Search");
+		}
+
+		if (!StatesProvinces.contains(state)) {
+			StatesProvinces.add(state);
+		}
+	}
 
 	public void clearEmployeeSizeRange() {
 		CorporateEmployeesSizeRange.clear();
 		CorporateEmployeesSizeRange = null;
 	}
 
-	public void addCorpEmployeeSizeRange(int range) throws Exception {
+	public void addCorpEmployeeSizeRange(CompanySize size) {
 		if (null == CorporateEmployeesSizeRange) {
-			CorporateEmployeesSizeRange = new ArrayList<String>();
+			CorporateEmployeesSizeRange = new ArrayList<CompanySize>();
 		}
 
-		switch (range) {
-		case SIZE_RANGE_1_4:
-			CorporateEmployeesSizeRange.add(new String(SIZE_RANGE_1_4_VALUE));
-			break;
-		case SIZE_RANGE_5_9:
-			CorporateEmployeesSizeRange.add(new String(SIZE_RANGE_5_9_VALUE));
-			break;
-		case SIZE_RANGE_10_19:
-			CorporateEmployeesSizeRange.add(new String(SIZE_RANGE_10_19_VALUE));
-			break;
-		case SIZE_RANGE_20_49:
-			CorporateEmployeesSizeRange.add(new String(SIZE_RANGE_20_49_VALUE));
-			break;
-		case SIZE_RANGE_50_99:
-			CorporateEmployeesSizeRange.add(new String(SIZE_RANGE_50_99_VALUE));
-			break;
-		case SIZE_RANGE_100_249:
-			CorporateEmployeesSizeRange.add(new String(SIZE_RANGE_100_249_VALUE));
-			break;
-		case SIZE_RANGE_250_499:
-			CorporateEmployeesSizeRange.add(new String(SIZE_RANGE_250_499_VALUE));
-			break;
-		case SIZE_RANGE_500_999:
-			CorporateEmployeesSizeRange.add(new String(SIZE_RANGE_500_999_VALUE));
-			break;
-		case SIZE_RANGE_1000_4999:
-			CorporateEmployeesSizeRange.add(new String(SIZE_RANGE_1000_4999_VALUE));
-			break;
-		case SIZE_RANGE_5000_9999:
-			CorporateEmployeesSizeRange.add(new String(SIZE_RANGE_5000_9999_VALUE));
-			break;
-		case SIZE_RANGE_10000:
-			CorporateEmployeesSizeRange.add(new String(SIZE_RANGE_10000_VALUE));
-			break;
+		if (!CorporateEmployeesSizeRange.contains(size)) {
+			CorporateEmployeesSizeRange.add(size);
+		}
+	}
+
+	public void clearLocationEmployeeSizeRange() {
+		LocationEmployeesSizeRange.clear();
+		LocationEmployeesSizeRange = null;
+	}
+
+	public void addLocationEmployeeSizeRange(CompanySize size) {
+		if (null == LocationEmployeesSizeRange) {
+			LocationEmployeesSizeRange = new ArrayList<CompanySize>();
+		}
+
+		if (!LocationEmployeesSizeRange.contains(size)) {
+			LocationEmployeesSizeRange.add(size);
 		}
 	}
 
@@ -103,22 +132,28 @@ public class CompanySearch extends Search {
 		CorporateSalesVolumeRange = null;
 	}
 
-	public void addCorpSalesVolumnRange(int range) throws Exception {
-		throw new Exception("Not implemented");
-		/*
-		 * if (null == CorporateSalesVolumeRange) { CorporateSalesVolumeRange =
-		 * new ArrayList<String>(); }
-		 */
-		/*
-		 * 
-		 * 1-500000 500000-1000000 1000000-2500000 2500000-5000000
-		 * 5000000-10000000 10000000-20000000 20000000-50000000
-		 * 50000000-100000000 100000000-500000000 500000000-1000000000
-		 * 1000000000
-		 */
-		/*
-		 * switch (range) { case SALES_VOLUMN_RANGE_1_500K:
-		 * CorporateSalesVolumeRange.add(new String("1-500000")); }
-		 */
+	public void clearLocationSalesVolumnRange() {
+		CorporateSalesVolumeRange.clear();
+		CorporateSalesVolumeRange = null;
+	}
+
+	public void addLocationSalesVolumnRange(CompanySales range) throws Exception {
+		if (null == LocationSalesVolumeRange) {
+			LocationSalesVolumeRange = new ArrayList<CompanySales>();
+		}
+
+		if (!LocationSalesVolumeRange.contains(range)) {
+			LocationSalesVolumeRange.add(range);
+		}
+	}
+
+	public void addCorpSalesVolumnRange(CompanySales range) throws Exception {
+		if (null == CorporateSalesVolumeRange) {
+			CorporateSalesVolumeRange = new ArrayList<CompanySales>();
+		}
+
+		if (!CorporateSalesVolumeRange.contains(range)) {
+			CorporateSalesVolumeRange.add(range);
+		}
 	}
 }

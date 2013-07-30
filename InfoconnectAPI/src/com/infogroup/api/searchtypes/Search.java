@@ -5,11 +5,16 @@ import java.util.List;
 
 import com.infogroup.api.types.AddressParsedFields;
 import com.infogroup.api.types.CitiesByStateProvinceFields;
+import com.infogroup.api.types.CountiesByStateProvinceFields;
+import com.infogroup.api.types.Ethnicity;
+import com.infogroup.api.types.Gender;
 import com.infogroup.api.types.GeoPoint;
 import com.infogroup.api.types.GeoPointRadius;
 import com.infogroup.api.types.RadiusPostalCode;
+import com.infogroup.api.types.RecordStatus;
 
 public class Search {
+
 	public static final int RESOURCE_TYPE_CORE = 0;
 	public static final int RESOURCE_TYPE_BASIC = 1;
 	public static final int RESOURCE_TYPE_ENHANCED = 2;
@@ -20,7 +25,6 @@ public class Search {
 	private static final String RESULT_TYPE_BASIC = "basic";
 	private static final String RESULT_TYPE_ENHANCED = "enhanced";
 	private static final String RESULT_TYPE_COUNTS = "counts";
-
 	protected String resourceType = RESULT_TYPE_CORE;
 
 	public AddressParsedFields AddressParsed;
@@ -29,9 +33,12 @@ public class Search {
 	public String Firstname;
 	public GeoPoint location;
 	public String Lastname;
+	public Gender Gender;
+	public Ethnicity Ethnicity;
 	public String middleInitial;
-	public String PostalCode;
+	protected List<String> PostalCode;
 	public String StateProvince;
+	public String County;
 
 	public int Limit = 10;
 	public int Offset = 0;
@@ -49,9 +56,64 @@ public class Search {
 	protected List<GeoPointRadius> RadiusCenterPointList;
 	protected List<RadiusPostalCode> RadiusPostalCodeList;
 
-	public ArrayList<String> notid = null;
+	protected ArrayList<String> notid = null;
+	protected ArrayList<String> Id = null;
 
 	protected ArrayList<CitiesByStateProvinceFields> CitiesByStateProvince;
+	protected ArrayList<CountiesByStateProvinceFields> CountiesByStateProvince;
+
+	protected ArrayList<String> Fields;
+
+	public String Email;
+	public RecordStatus RecordStatus;
+
+	/*
+	 * helper functions for searchable fields
+	 */
+
+	public void clearOutputFields() {
+		Fields.clear();
+		Fields = null;
+	}
+
+	public void addOutputField(String field) {
+		if (null == Fields) {
+			Fields = new ArrayList<String>();
+		}
+
+		Fields.add(field);
+	}
+
+	public void clearPostalCodes() {
+		PostalCode.clear();
+		PostalCode = null;
+	}
+
+	public void addPostalCode(String zip) {
+		if (null == PostalCode) {
+			PostalCode = new ArrayList<String>();
+		}
+
+		if (!PostalCode.contains(zip)) {
+			PostalCode.add(zip);
+		}
+	}
+
+	public void clearCountyByState() {
+		CountiesByStateProvince.clear();
+		CountiesByStateProvince = null; // setting to null ensures it won't show
+										// up in the JSON
+	}
+
+	public void addCountyByState(String county, String state) throws Exception {
+		if (null == CountiesByStateProvince) {
+			CountiesByStateProvince = new ArrayList<CountiesByStateProvinceFields>();
+		} else if (999 == CountiesByStateProvince.size()) {
+			throw new Exception("Too many search counties. 1000 max.");
+		}
+
+		CountiesByStateProvince.add(new CountiesByStateProvinceFields(county, state));
+	}
 
 	public void clearCityByState() {
 		CitiesByStateProvince.clear();
@@ -83,6 +145,23 @@ public class Search {
 
 		if (!notid.contains(id)) {
 			notid.add(id);
+		}
+	}
+
+	public void clearIds() {
+		Id.clear();
+		Id = null; // setting to null ensures it won't show up in the JSON
+	}
+
+	public void addId(String id) throws Exception {
+		if (null == Id) {
+			Id = new ArrayList<String>();
+		} else if (999 == notid.size()) {
+			throw new Exception("Too many Ids. 1000 max.");
+		}
+
+		if (!Id.contains(id)) {
+			Id.add(id);
 		}
 	}
 
