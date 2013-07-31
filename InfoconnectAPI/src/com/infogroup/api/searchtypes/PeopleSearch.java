@@ -15,25 +15,25 @@ public class PeopleSearch extends Search {
 	protected List<String> ActualIncome = null;
 	protected List<String> Age;
 	protected List<AgeRange> AgeRange;
-	public boolean AreChildrenPresent;
+	public Boolean AreChildrenPresent;
 	public String BirthMonth;
 	public String EmailSha1Upper;
 
 	protected List<HomeValueRange> HomeValueRange;
 	public HousingType HousingType;
 
-	public boolean IncludeAllResidents;
+	public Boolean IncludeAllResidents;
 	/*
 	 * NOTE: IncludeHistoricalEmail is used to retrieve historical records. If
 	 * set to true, only Basic ResourceType is valid. If used, must be true or
 	 * false (default is false). This field can only be used in combination with
 	 * Email or EmailSha1Upper.
 	 */
-	public boolean IncludeHistoricalEmail;
+	public Boolean IncludeHistoricalEmail;
 
 	protected List<IncomeRange> IncomeRange;
 
-	public boolean IsHomeowner;
+	public Boolean IsHomeowner;
 
 	public String MaritalStatus;
 	public List<String> YearsAtResidence;

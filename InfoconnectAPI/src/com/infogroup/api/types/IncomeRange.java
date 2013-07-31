@@ -13,6 +13,7 @@ public enum IncomeRange {
 		this.val = val;
 	}
 
+	@Override
 	public String toString() {
 		return val;
 	}

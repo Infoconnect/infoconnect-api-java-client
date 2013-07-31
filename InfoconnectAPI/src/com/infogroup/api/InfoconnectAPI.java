@@ -10,12 +10,20 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapter;
+import com.google.gson.TypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import com.google.gson.stream.JsonWriter;
 import com.infogroup.api.records.Company;
 import com.infogroup.api.records.Person;
 import com.infogroup.api.records.SIC;
@@ -44,9 +52,15 @@ public class InfoconnectAPI {
 	private String resultFormat = MIME_TYPE_JSON;
 	private String postFormat = MIME_TYPE_JSON;
 
-	private Gson gson = new Gson();
+	private Gson gson;
 	private int statusCode;
 	private String lastAnswer;
+
+	public InfoconnectAPI() {
+		GsonBuilder builder = new GsonBuilder();
+		builder.registerTypeAdapterFactory(new CustomEnumTypeAdapterFactory());
+		gson = builder.create();
+	}
 
 	public static class Counts {
 		public int MatchCount;
@@ -186,6 +200,9 @@ public class InfoconnectAPI {
 
 	public List<Person> people(String search) {
 		String output = doPost(apiPeople, search);
+		if (statusCode != 200) {
+			return null;
+		}
 		Type type = new TypeToken<List<Person>>() {
 		}.getType();
 		return gson.fromJson(output, type);
@@ -234,7 +251,8 @@ public class InfoconnectAPI {
 	private String doPost(String api, String body) {
 		String query = "apikey=" + apiKey;
 		String answer = null;
-		URLConnection client;
+		URLConnection client = null;
+		;
 		statusCode = 0;
 		lastAnswer = null;
 		try {
@@ -266,7 +284,13 @@ public class InfoconnectAPI {
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			HttpURLConnection httpConnection = (HttpURLConnection) client;
+			try {
+				answer = IOUtils.toString(httpConnection.getErrorStream());
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 
 		lastAnswer = answer;
@@ -310,5 +334,39 @@ public class InfoconnectAPI {
 
 		lastAnswer = answer;
 		return answer;
+	}
+
+	private class CustomEnumTypeAdapterFactory implements TypeAdapterFactory {
+		public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
+			Class<T> rawType = (Class<T>) type.getRawType();
+			if (!rawType.isEnum()) {
+				return null;
+			}
+
+			final Map<String, T> stringToConstant = new HashMap<String, T>();
+			for (T constant : rawType.getEnumConstants()) {
+				stringToConstant.put(constant.toString(), constant);
+			}
+
+			return new TypeAdapter<T>() {
+				public void write(JsonWriter out, T value) throws IOException {
+					if (value == null) {
+						out.nullValue();
+					} else {
+						out.value(value.toString());
+					}
+				}
+
+				public T read(JsonReader reader) throws IOException {
+					if (reader.peek() == JsonToken.NULL) {
+						reader.nextNull();
+						return null;
+					} else {
+						return stringToConstant.get(reader.nextString());
+					}
+				}
+			};
+		}
+
 	}
 }

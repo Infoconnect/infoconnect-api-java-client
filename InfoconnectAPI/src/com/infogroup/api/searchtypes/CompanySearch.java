@@ -32,7 +32,7 @@ public class CompanySearch extends Search {
 	public Long LocationSalesVolumeActual = null;
 	protected List<CompanySales> LocationSalesVolumeRange = null;
 
-	public boolean IsFranchise;
+	public Boolean IsFranchise;
 	public String EIN;
 
 	public String PrimaryNaics;
