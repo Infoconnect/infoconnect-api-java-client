@@ -9,4 +9,5 @@ There are a couple of projects in this repo.
 		The intention is to make it as easy as possible to get started and using the API.
 		
 	SWTTest - This is a desktop java app that uses SWT and the InfoconnectAPI to plot companies on an 
-		embedded Google map.
+		embedded Google map. Make sure to update the project class path to include the correct
+		version of SWT!!

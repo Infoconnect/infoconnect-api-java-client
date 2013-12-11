@@ -5,15 +5,9 @@ public class MatchSearch extends Search {
 	public static final int REQUEST_TYPE_COMPANY = 1;
 	public static final int REQUEST_TYPE_PERSON = 2;
 
-	public String City;
 	public String Confidence;
-	public String CompanyName;
-	public String Name;
-	public String Phone;
-	public String PostalCode;
 	protected String RequestType;
 	protected String ResourceType;
-	public String StateProvince;
 	public String StreetAddress;
 	public String StreetAddress2;
 

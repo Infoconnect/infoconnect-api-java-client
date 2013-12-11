@@ -97,7 +97,7 @@ public class GoogleMapsTest {
 				boolean hasRegion = (Boolean) browser.evaluate("return lastBounds != undefined");
 				CompanySearch cs = new CompanySearch();
 				cs.resourceType = ResourceType.BASIC;
-
+				cs.CompanyName = "Infogroup";
 				try {
 					if (hasRegion) {
 						Double neLat = ((Double) browser.evaluate("return lastBounds.getNorthEast().lat();"));

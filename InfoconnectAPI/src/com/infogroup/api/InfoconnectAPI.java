@@ -173,6 +173,10 @@ public class InfoconnectAPI {
 		return companies(jsonSearch);
 	}
 
+	public String companiesAsString(String search) {
+		return doPost(apiCompanies, search);
+	}
+
 	public List<Company> companies(String search) {
 		String output = doPost(apiCompanies, search);
 		Type type = new TypeToken<List<Company>>() {
@@ -287,7 +291,7 @@ public class InfoconnectAPI {
 			HttpURLConnection httpConnection = (HttpURLConnection) client;
 			try {
 				answer = IOUtils.toString(httpConnection.getErrorStream());
-			} catch (IOException e1) {
+			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
@@ -311,7 +315,7 @@ public class InfoconnectAPI {
 			query += "&" + q;
 		}
 		String answer = null;
-		URLConnection client;
+		URLConnection client = null;
 		statusCode = 0;
 		lastAnswer = null;
 		try {
@@ -327,11 +331,17 @@ public class InfoconnectAPI {
 			answer = IOUtils.toString(response);
 			System.out.println("Response: " + answer);
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 		}
 
+		try {
+			statusCode = ((HttpURLConnection) client).getResponseCode();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		lastAnswer = answer;
 		return answer;
 	}
